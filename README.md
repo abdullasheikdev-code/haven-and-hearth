@@ -11,7 +11,7 @@
 
 ### 🌐 Live Deployments
 - **GitHub Pages (Permanent)**: [https://abdullasheikdev-code.github.io/haven-and-hearth/](https://abdullasheikdev-code.github.io/haven-and-hearth/)
-- **Vercel Instant Preview**: [https://temporary-snappy-scarlet-qx0lz71.vercel.app](https://temporary-snappy-scarlet-qx0lz71.vercel.app) *(Claim token: `f9a0816a-d91d-4641-be87-57a29aaf5aeb`)*
+- **Vercel Mobile-Ready Preview**: [https://temporary-instant-cerulean-r6w5mfn.vercel.app](https://temporary-instant-cerulean-r6w5mfn.vercel.app) *(Claim code: `e5b0eda6-0642-4f82-97c7-a7dede43df51`)*
 - **Source Code**: [https://github.com/abdullasheikdev-code/haven-and-hearth](https://github.com/abdullasheikdev-code/haven-and-hearth)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fabdullasheikdev-code%2Fhaven-and-hearth&project-name=haven-hearth-luxury)
