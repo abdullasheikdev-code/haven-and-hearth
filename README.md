@@ -9,6 +9,11 @@
 
 > **Haven & Hearth** is an interconnected luxury hospitality platform uniting Michelin-caliber culinary discovery, online dining orders, availability-aware table reservations, boutique hotel and suite bookings, in-room dining, high-velocity restaurant POS, real-time Kitchen Display Systems (KDS), pantry inventory, and executive business analytics into a single multi-tenant MERN application.
 
+### 🌐 Live Deployments
+- **GitHub Pages**: [https://abdullasheikdev-code.github.io/haven-and-hearth/](https://abdullasheikdev-code.github.io/haven-and-hearth/)
+- **Vercel**: [https://temporary-snappy-scarlet-qx0lz71.vercel.app](https://temporary-snappy-scarlet-qx0lz71.vercel.app)
+- **Source Code**: [https://github.com/abdullasheikdev-code/haven-and-hearth](https://github.com/abdullasheikdev-code/haven-and-hearth)
+
 ---
 
 ## 1. Editorial Visual Direction & Design Tokens
