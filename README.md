@@ -10,8 +10,8 @@
 > **Haven & Hearth** is an interconnected luxury hospitality platform uniting Michelin-caliber culinary discovery, online dining orders, availability-aware table reservations, boutique hotel and suite bookings, in-room dining, high-velocity restaurant POS, real-time Kitchen Display Systems (KDS), pantry inventory, and executive business analytics into a single multi-tenant MERN application.
 
 ### 🌐 Live Deployments
-- **GitHub Pages (Permanent)**: [https://abdullasheikdev-code.github.io/haven-and-hearth/](https://abdullasheikdev-code.github.io/haven-and-hearth/)
-- **Vercel Mobile-Ready Preview**: [https://temporary-instant-cerulean-r6w5mfn.vercel.app](https://temporary-instant-cerulean-r6w5mfn.vercel.app) *(Claim code: `e5b0eda6-0642-4f82-97c7-a7dede43df51`)*
+- **GitHub Pages (Permanent Free)**: [https://abdullasheikdev-code.github.io/haven-and-hearth/](https://abdullasheikdev-code.github.io/haven-and-hearth/)
+- **Vercel Fast Edge (Verified 200 OK)**: [https://temporary-sonic-cerulean-f470ji5.vercel.app](https://temporary-sonic-cerulean-f470ji5.vercel.app) *(Claim code: `7032f50e-c6ed-443b-980c-a7b3cbd6eacf`)*
 - **Source Code**: [https://github.com/abdullasheikdev-code/haven-and-hearth](https://github.com/abdullasheikdev-code/haven-and-hearth)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fabdullasheikdev-code%2Fhaven-and-hearth&project-name=haven-hearth-luxury)

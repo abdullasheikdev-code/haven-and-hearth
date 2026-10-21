@@ -1,7 +1,4 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "name": "haven-hearth-luxury",
-  "cleanUrls": true,
   "buildCommand": "npm run build:web",
   "outputDirectory": "apps/web/dist",
   "rewrites": [
