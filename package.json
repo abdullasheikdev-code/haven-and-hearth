@@ -1,0 +1,25 @@
+{
+  "name": "haven-and-hearth-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=@haven/api\" \"npm run dev --workspace=@haven/web\"",
+    "dev:api": "npm run dev --workspace=@haven/api",
+    "dev:web": "npm run dev --workspace=@haven/web",
+    "build": "npm run build --workspace=@haven/shared; npm run build --workspace=@haven/api; npm run build --workspace=@haven/web",
+    "build:shared": "npm run build --workspace=@haven/shared",
+    "build:api": "npm run build --workspace=@haven/api",
+    "build:web": "npm run build --workspace=@haven/web",
+    "test": "npm run test --workspaces --if-present",
+    "seed": "npm run seed --workspace=@haven/api",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5"
+  }
+}
