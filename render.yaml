@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: haven-and-hearth-api
+    runtime: node
+    plan: free
+    buildCommand: npm install; npm run build --workspace=@haven/shared; npm run build --workspace=@haven/api
+    startCommand: npm run start --workspace=@haven/api
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        value: https://abdullasheikdev-code.github.io
+      - key: CORS_ORIGIN
+        value: https://abdullasheikdev-code.github.io
