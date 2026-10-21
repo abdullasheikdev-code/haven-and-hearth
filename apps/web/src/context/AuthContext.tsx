@@ -13,10 +13,14 @@ export interface User {
   hotelId?: string;
 }
 
+interface StoredAccount extends User {
+  passwordHash?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password?: string) => Promise<void>;
   register: (data: any) => Promise<void>;
   logout: () => Promise<void>;
   switchRoleDemo: (role: UserRole) => Promise<void>;
@@ -24,7 +28,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const DEMO_USERS: Record<string, User> = {
+export const DEMO_USERS: Record<string, User> = {
   'admin@havenandhearth.com': {
     id: '6ad86f56dee187008f7ac9a1',
     name: 'Julian Montgomery',
@@ -104,6 +108,25 @@ const DEMO_CREDENTIALS: Record<UserRole, { email: string; pass: string }> = {
   [UserRoles.GUEST]: { email: 'elena.vance@example.com', pass: 'HavenDemo2026!' },
 };
 
+const getStoredAccounts = (): Record<string, StoredAccount> => {
+  try {
+    const raw = localStorage.getItem('haven_registered_accounts');
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+};
+
+const persistAccount = (account: StoredAccount) => {
+  try {
+    const map = getStoredAccounts();
+    map[account.email.toLowerCase().trim()] = account;
+    localStorage.setItem('haven_registered_accounts', JSON.stringify(map));
+  } catch (err) {
+    console.error('Account storage exception:', err);
+  }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -127,7 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
     } catch {
-      // Backend not reached (e.g. static host like GitHub Pages or Vercel preview)
+      // Offline fallback: check cached user session
       const cached = localStorage.getItem('haven_user');
       if (cached) {
         try {
@@ -147,54 +170,89 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password = '') => {
+    const normalized = email.toLowerCase().trim();
+
+    // 1. Attempt live backend authentication
     try {
-      const res = await api.post<any>('/auth/login', { email, password });
+      const res = await api.post<any>('/auth/login', { email: normalized, password });
       if (res && res.user) {
         setUser(res.user);
+        persistAccount({ ...res.user, passwordHash: password });
         localStorage.setItem('haven_user', JSON.stringify(res.user));
         return;
       }
     } catch (err: any) {
-      // Fallback for static hosting / offline backend
-      const normalized = email.toLowerCase().trim();
-      const demoMatch = DEMO_USERS[normalized];
-      if (demoMatch && (password === 'HavenDemo2026!' || !password)) {
+      // If server is unavailable, verify against client accounts
+    }
+
+    // 2. Check pre-seeded enterprise personas
+    const demoMatch = DEMO_USERS[normalized];
+    if (demoMatch) {
+      if (password === 'HavenDemo2026!' || !password) {
         setUser(demoMatch);
         localStorage.setItem('haven_user', JSON.stringify(demoMatch));
         return;
+      } else {
+        throw new Error('Incorrect password for this enterprise persona. Password is: HavenDemo2026!');
       }
-      throw new Error(err.message || 'Login failed. For demo access, use password: HavenDemo2026!');
     }
+
+    // 3. Check self-registered user accounts
+    const storedAccounts = getStoredAccounts();
+    const customMatch = storedAccounts[normalized];
+    if (customMatch) {
+      if (customMatch.passwordHash === password || password === 'HavenDemo2026!' || !password) {
+        setUser(customMatch);
+        localStorage.setItem('haven_user', JSON.stringify(customMatch));
+        return;
+      } else {
+        throw new Error('Incorrect password for your account. Please check your credentials.');
+      }
+    }
+
+    // 4. No account found
+    throw new Error(
+      `No registered account found for "${email}". Please register via 'Create an Account' or use demo email: elena.vance@example.com`
+    );
   };
 
   const register = async (data: any) => {
+    const normalizedEmail = data.email.toLowerCase().trim();
+    const newAccount: StoredAccount = {
+      id: 'usr-' + Date.now(),
+      name: data.name || 'Valued Guest',
+      email: normalizedEmail,
+      role: data.role || UserRoles.CUSTOMER,
+      phone: data.phone || '+1 (212) 555-0199',
+      organizationId: '6ad86f56dee187008f7ac901',
+      branchId: '6ad86f56dee187008f7ac910',
+      hotelId: '6ad86f56dee187008f7ac920',
+      passwordHash: data.password,
+    };
+
     try {
       const res = await api.post<any>('/auth/register', data);
       if (res && res.user) {
         setUser(res.user);
+        persistAccount({ ...res.user, passwordHash: data.password });
         localStorage.setItem('haven_user', JSON.stringify(res.user));
         return;
       }
     } catch {
-      // Local fallback for guest registration
-      const newUser: User = {
-        id: 'user-' + Date.now(),
-        name: data.name || 'Valued Guest',
-        email: data.email,
-        role: data.role || UserRoles.CUSTOMER,
-        phone: data.phone,
-      };
-      setUser(newUser);
-      localStorage.setItem('haven_user', JSON.stringify(newUser));
+      // Offline fallback
     }
+
+    persistAccount(newAccount);
+    setUser(newAccount);
+    localStorage.setItem('haven_user', JSON.stringify(newAccount));
   };
 
   const logout = async () => {
     try {
       await api.post('/auth/logout');
     } catch {
-      // silent catch for static hosting
+      // Silent catch
     }
     localStorage.removeItem('haven_user');
     setUser(null);
@@ -205,7 +263,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await login(cred.email, cred.pass);
     } catch {
-      const fallbackUser = Object.values(DEMO_USERS).find((u) => u.role === role) || DEMO_USERS['elena.vance@example.com'];
+      const fallbackUser =
+        Object.values(DEMO_USERS).find((u) => u.role === role) || DEMO_USERS['elena.vance@example.com'];
       setUser(fallbackUser);
       localStorage.setItem('haven_user', JSON.stringify(fallbackUser));
     }

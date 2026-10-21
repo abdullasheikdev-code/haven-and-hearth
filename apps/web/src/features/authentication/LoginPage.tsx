@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole, UserRoles } from '@haven/shared';
-import { Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck, UserCheck, Crown, Receipt, ChefHat, BedDouble, Brush, Shield } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const { login, switchRoleDemo } = useAuth();
   const navigate = useNavigate();
 
+  const [activeTab, setActiveTab] = useState<'guest' | 'staff'>('guest');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,21 +20,22 @@ export const LoginPage: React.FC = () => {
     try {
       setLoading(true);
       await login(email, password);
-      navigate('/');
+      navigate(activeTab === 'staff' ? '/app/overview' : '/');
     } catch (err: any) {
-      setError(err.message || 'Login failed. Please check credentials.');
+      setError(err.message || 'Authentication failed. Please verify your credentials.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDemoFill = async (role: UserRole) => {
+  const handleQuickPersona = async (role: UserRole, targetPath: string) => {
+    setError(null);
     try {
       setLoading(true);
       await switchRoleDemo(role);
-      navigate('/');
+      navigate(targetPath);
     } catch (err: any) {
-      setError(err.message || 'Demo login failed');
+      setError(err.message || 'Demo authentication failed');
     } finally {
       setLoading(false);
     }
@@ -43,8 +45,8 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-ivory-100 flex text-left font-sans">
       {/* Left Form Column */}
       <div className="flex-1 flex flex-col justify-center py-12 px-6 sm:px-12 lg:px-20 max-w-xl mx-auto">
-        <div className="mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
+        <div className="mb-6">
+          <Link to="/" className="inline-flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-forest-800 flex items-center justify-center text-mango-200 font-serif font-bold text-sm">
               H
             </div>
@@ -54,15 +56,51 @@ export const LoginPage: React.FC = () => {
           </Link>
 
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-charcoal-900">
-            Welcome Back
+            Enterprise Sign In
           </h1>
-          <p className="text-xs text-charcoal-500 mt-2">
-            Sign in to access your guest reservations, room stays, or staff operations.
+          <p className="text-xs text-charcoal-500 mt-1">
+            Access your guest reservations, boutique suite stays, or enterprise operations console.
           </p>
         </div>
 
+        {/* Corporate Portal Tabs */}
+        <div className="flex bg-ivory-200 p-1 rounded-2xl mb-6">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('guest');
+              setError(null);
+              setEmail('');
+              setPassword('');
+            }}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'guest'
+                ? 'bg-white text-forest-900 shadow-sm'
+                : 'text-charcoal-500 hover:text-charcoal-900'
+            }`}
+          >
+            Guest &amp; Customer Portal
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab('staff');
+              setError(null);
+              setEmail('');
+              setPassword('');
+            }}
+            className={`flex-1 py-2.5 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'staff'
+                ? 'bg-forest-900 text-ivory-50 shadow-sm'
+                : 'text-charcoal-500 hover:text-charcoal-900'
+            }`}
+          >
+            Staff &amp; Operations Portal
+          </button>
+        </div>
+
         {error && (
-          <div className="mb-6 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
+          <div className="mb-6 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold leading-relaxed">
             {error}
           </div>
         )}
@@ -70,14 +108,14 @@ export const LoginPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-bold text-charcoal-700 mb-1">
-              Email Address
+              {activeTab === 'guest' ? 'Customer Email' : 'Enterprise Staff Email'}
             </label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. elena.vance@example.com"
+              placeholder={activeTab === 'guest' ? 'e.g. elena.vance@example.com' : 'e.g. owner@havenandhearth.com'}
               className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-ivory-300 text-xs text-charcoal-900 focus:outline-none focus:border-forest-700"
             />
           </div>
@@ -85,6 +123,7 @@ export const LoginPage: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="block text-xs font-bold text-charcoal-700">Password</label>
+              <span className="text-[10px] text-charcoal-400">Demo: HavenDemo2026!</span>
             </div>
             <input
               type="password"
@@ -101,40 +140,66 @@ export const LoginPage: React.FC = () => {
             disabled={loading}
             className="w-full py-3.5 rounded-xl bg-forest-800 hover:bg-forest-900 disabled:opacity-50 text-ivory-50 text-xs font-bold uppercase tracking-wider shadow-sm transition-all"
           >
-            {loading ? 'Authenticating...' : 'Sign In'}
+            {loading ? 'Authenticating...' : `Sign In to ${activeTab === 'guest' ? 'Guest Sanctuary' : 'Operations Console'}`}
           </button>
         </form>
 
-        {/* 1-Click Quick Demo Switcher */}
-        <div className="mt-8 pt-6 border-t border-ivory-300">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-charcoal-700 mb-3">
+        {/* 1-Click Persona Shortcuts */}
+        <div className="mt-6 pt-5 border-t border-ivory-300">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-charcoal-700 mb-2.5">
             <Sparkles className="w-4 h-4 text-mango-500" />
-            <span>1-Click Live Persona Logins:</span>
+            <span>Instant 1-Click Verification Logins:</span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {[
-              { role: UserRoles.CUSTOMER, label: 'Customer' },
-              { role: UserRoles.RESTAURANT_OWNER, label: 'Owner / GM' },
-              { role: UserRoles.CASHIER, label: 'POS Cashier' },
-              { role: UserRoles.KITCHEN_STAFF, label: 'Kitchen Chef' },
-              { role: UserRoles.HOTEL_RECEPTIONIST, label: 'Hotel Desk' },
-              { role: UserRoles.HOUSEKEEPING_STAFF, label: 'Housekeeper' },
-            ].map((d) => (
-              <button
-                key={d.role}
-                type="button"
-                onClick={() => handleDemoFill(d.role)}
-                className="p-2 rounded-lg bg-ivory-200 hover:bg-ivory-300 text-charcoal-800 text-[11px] font-bold transition-colors text-center"
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
+          {activeTab === 'guest' ? (
+            <button
+              type="button"
+              onClick={() => handleQuickPersona(UserRoles.CUSTOMER, '/')}
+              className="w-full p-3 rounded-xl bg-white border border-ivory-300 hover:border-forest-600 hover:shadow-soft transition-all flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                  <UserCheck className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <p className="text-xs font-bold text-charcoal-900 leading-tight">Elena Vance (Customer)</p>
+                  <p className="text-[10px] text-charcoal-500">elena.vance@example.com</p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-charcoal-400 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {[
+                { role: UserRoles.RESTAURANT_OWNER, name: 'Vivienne St. Claire', label: 'Owner & GM', icon: Crown, path: '/app/overview' },
+                { role: UserRoles.CASHIER, name: 'Liam Sterling', label: 'POS Cashier', icon: Receipt, path: '/app/pos' },
+                { role: UserRoles.KITCHEN_STAFF, name: 'Chef Antoine', label: 'Kitchen Chef', icon: ChefHat, path: '/app/kitchen' },
+                { role: UserRoles.HOTEL_RECEPTIONIST, name: 'Camilla Rossi', label: 'Hotel Desk', icon: BedDouble, path: '/hotel/overview' },
+                { role: UserRoles.HOUSEKEEPING_STAFF, name: 'Rosa Morales', label: 'Housekeeper', icon: Brush, path: '/hotel/housekeeping' },
+                { role: UserRoles.PLATFORM_ADMIN, name: 'Julian M.', label: 'Platform Admin', icon: Shield, path: '/app/reports' },
+              ].map((p) => {
+                const Icon = p.icon;
+                return (
+                  <button
+                    key={p.role}
+                    type="button"
+                    onClick={() => handleQuickPersona(p.role, p.path)}
+                    className="p-2 rounded-xl bg-white border border-ivory-300 hover:border-forest-600 hover:shadow-sm text-left transition-all"
+                  >
+                    <div className="flex items-center gap-1.5 mb-1 text-forest-800">
+                      <Icon className="w-3.5 h-3.5" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider">{p.label}</span>
+                    </div>
+                    <p className="text-xs font-bold text-charcoal-900 leading-tight truncate">{p.name}</p>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        <p className="mt-8 text-xs text-charcoal-500 text-center">
-          New guest?{' '}
+        <p className="mt-6 text-xs text-charcoal-500 text-center">
+          Need a new account?{' '}
           <Link to="/register" className="font-bold text-forest-800 hover:text-terracotta-600">
             Create an Account
           </Link>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { UserRoles } from '@haven/shared';
 import {
   LayoutDashboard,
   Receipt,
@@ -20,7 +21,7 @@ import {
 } from 'lucide-react';
 
 export const StaffLayout: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, switchRoleDemo } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -35,6 +36,77 @@ export const StaffLayout: React.FC = () => {
     { name: 'Inventory & Stock', path: '/app/inventory', icon: Boxes },
     { name: 'Business Reports', path: '/app/reports', icon: BarChart3 },
   ];
+
+  const isStaff = user && user.role !== UserRoles.CUSTOMER && user.role !== UserRoles.GUEST;
+
+  if (!isStaff) {
+    return (
+      <div className="min-h-screen bg-ivory-100 flex items-center justify-center p-6 text-center font-sans">
+        <div className="max-w-md w-full bg-white p-8 rounded-3xl border border-ivory-300 shadow-editorial space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-forest-900 text-mango-300 flex items-center justify-center mx-auto shadow-soft">
+            <Shield className="w-7 h-7" />
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-terracotta-600">
+            Enterprise Security Policy
+          </span>
+          <h2 className="font-serif text-2xl font-bold text-charcoal-900">
+            Operations Access Required
+          </h2>
+          <p className="text-xs text-charcoal-500 leading-relaxed">
+            {user ? (
+              <>
+                You are currently signed in as <strong>{user.name}</strong> ({user.role.replace('_', ' ')}).
+                Hospitality operational suites (POS, Kitchen KDS, Hotel Front Desk, Reports) require staff authorization.
+              </>
+            ) : (
+              <>Please authenticate with staff credentials to enter the Haven &amp; Hearth Operations Hub.</>
+            )}
+          </p>
+
+          <div className="pt-2 space-y-2">
+            <button
+              onClick={() => switchRoleDemo(UserRoles.RESTAURANT_OWNER)}
+              className="w-full py-2.5 rounded-xl bg-forest-800 text-ivory-50 text-xs font-bold hover:bg-forest-900 transition-colors shadow-soft"
+            >
+              Authorize as Owner &amp; GM (Vivienne St. Claire)
+            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => switchRoleDemo(UserRoles.CASHIER)}
+                className="py-2 px-3 rounded-xl bg-ivory-200 text-charcoal-800 text-xs font-bold hover:bg-ivory-300 transition-colors"
+              >
+                POS Cashier
+              </button>
+              <button
+                onClick={() => switchRoleDemo(UserRoles.KITCHEN_STAFF)}
+                className="py-2 px-3 rounded-xl bg-ivory-200 text-charcoal-800 text-xs font-bold hover:bg-ivory-300 transition-colors"
+              >
+                Kitchen Chef
+              </button>
+              <button
+                onClick={() => switchRoleDemo(UserRoles.HOTEL_RECEPTIONIST)}
+                className="py-2 px-3 rounded-xl bg-ivory-200 text-charcoal-800 text-xs font-bold hover:bg-ivory-300 transition-colors"
+              >
+                Hotel Desk
+              </button>
+              <button
+                onClick={() => switchRoleDemo(UserRoles.HOUSEKEEPING_STAFF)}
+                className="py-2 px-3 rounded-xl bg-ivory-200 text-charcoal-800 text-xs font-bold hover:bg-ivory-300 transition-colors"
+              >
+                Housekeeping
+              </button>
+            </div>
+            <Link
+              to="/"
+              className="block pt-3 text-xs font-semibold text-terracotta-600 hover:text-terracotta-700"
+            >
+              Return to Guest Dining &amp; Sanctuary
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-ivory-200 flex text-left font-sans">

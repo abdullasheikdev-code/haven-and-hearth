@@ -157,6 +157,14 @@ export const MOCK_ROOM_TYPES = [
   },
 ];
 
+export const MOCK_ROOMS = [
+  { _id: 'rm1', roomNumber: '201', floor: 2, housekeepingStatus: 'CLEAN', status: 'AVAILABLE', roomTypeId: MOCK_ROOM_TYPES[0] },
+  { _id: 'rm2', roomNumber: '202', floor: 2, housekeepingStatus: 'DIRTY', status: 'DIRTY', roomTypeId: MOCK_ROOM_TYPES[0] },
+  { _id: 'rm3', roomNumber: '301', floor: 3, housekeepingStatus: 'IN_PROGRESS', status: 'OCCUPIED', roomTypeId: MOCK_ROOM_TYPES[1] },
+  { _id: 'rm4', roomNumber: '302', floor: 3, housekeepingStatus: 'INSPECTED', status: 'AVAILABLE', roomTypeId: MOCK_ROOM_TYPES[1] },
+  { _id: 'rm5', roomNumber: '401', floor: 4, housekeepingStatus: 'CLEAN', status: 'AVAILABLE', roomTypeId: MOCK_ROOM_TYPES[0] },
+];
+
 export const MOCK_ORDERS = [
   {
     _id: 'ord-101',
@@ -164,6 +172,8 @@ export const MOCK_ORDERS = [
     orderType: OrderTypes.DINE_IN,
     tableNumber: '2',
     status: OrderStatuses.PREPARING,
+    restaurantId: { name: "L'Étoile Brasserie" },
+    customerName: 'Elena Vance',
     items: [
       { name: 'Pan-Seared Hudson Valley Duck Breast', quantity: 2, price: 48 },
       { name: 'Hand-Rolled Black Truffle Agnolotti', quantity: 1, price: 42 },
@@ -178,6 +188,8 @@ export const MOCK_ORDERS = [
     orderType: OrderTypes.ROOM_SERVICE,
     roomNumber: '402',
     status: OrderStatuses.PENDING,
+    restaurantId: { name: "L'Étoile Brasserie" },
+    customerName: 'Elena Vance',
     items: [
       { name: 'Wood-Fired Wild Mediterranean Turbot', quantity: 1, price: 54 },
       { name: 'Valrhona Grand Cru Soufflé', quantity: 2, price: 22 },
@@ -220,3 +232,35 @@ export const MOCK_BOOKINGS = [
     status: BookingStatuses.CONFIRMED,
   },
 ];
+
+export const MOCK_CUSTOMER_RESERVATIONS = [
+  {
+    _id: 'res-101',
+    reservationNumber: 'RES-8421',
+    restaurantId: { name: "L'Étoile Brasserie" },
+    reservationDate: '2026-10-23',
+    timeSlot: '19:30',
+    partySize: 4,
+    status: 'CONFIRMED',
+  },
+  {
+    _id: 'res-102',
+    reservationNumber: 'RES-8422',
+    restaurantId: { name: 'Aura Hearthfire & Raw Bar' },
+    reservationDate: '2026-10-25',
+    timeSlot: '20:00',
+    partySize: 2,
+    status: 'CONFIRMED',
+  },
+];
+
+export const MOCK_REPORTS = {
+  sales: { totalSales: 48920, orderCount: 312, averageOrderValue: 156.79 },
+  hotel: { totalRevenue: 98400, bookingCount: 42, occupancyRate: 85.5, totalRooms: 20, occupiedRooms: 17 },
+  inventory: { inventoryValuation: 24850, lowStockAlerts: 1 },
+  channelSales: {
+    DINE_IN: { total: 28400, count: 180 },
+    ROOM_SERVICE: { total: 12500, count: 85 },
+    TAKEAWAY: { total: 8020, count: 47 },
+  },
+};

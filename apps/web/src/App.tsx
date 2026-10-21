@@ -5,6 +5,7 @@ import { CartProvider } from './context/CartContext';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
 import { DemoRoleSwitcher } from './components/common/DemoRoleSwitcher';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 
 // Customer Pages
 import { HomePage } from './features/discovery/HomePage';
@@ -42,45 +43,47 @@ const CustomerLayout: React.FC = () => (
 
 export const App: React.FC = () => {
   return (
-    <Router>
-      <AuthProvider>
-        <CartProvider>
-          <Routes>
-            {/* Customer Facing Routes */}
-            <Route element={<CustomerLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/restaurants" element={<RestaurantDiscoveryPage />} />
-              <Route path="/restaurants/:slug" element={<RestaurantDetailPage />} />
-              <Route path="/hotels" element={<HotelDiscoveryPage />} />
-              <Route path="/hotels/:slug" element={<HotelDetailPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/orders/:orderId" element={<OrderConfirmationPage />} />
-              <Route path="/account/orders" element={<CustomerOrdersPage />} />
-              <Route path="/account/bookings" element={<CustomerBookingsPage />} />
-            </Route>
+    <ErrorBoundary>
+      <Router>
+        <AuthProvider>
+          <CartProvider>
+            <Routes>
+              {/* Customer Facing Routes */}
+              <Route element={<CustomerLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/restaurants" element={<RestaurantDiscoveryPage />} />
+                <Route path="/restaurants/:slug" element={<RestaurantDetailPage />} />
+                <Route path="/hotels" element={<HotelDiscoveryPage />} />
+                <Route path="/hotels/:slug" element={<HotelDetailPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/orders/:orderId" element={<OrderConfirmationPage />} />
+                <Route path="/account/orders" element={<CustomerOrdersPage />} />
+                <Route path="/account/bookings" element={<CustomerBookingsPage />} />
+              </Route>
 
-            {/* Standalone Auth Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+              {/* Standalone Auth Routes */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            {/* Operations Staff Routes */}
-            <Route element={<StaffLayout />}>
-              <Route path="/app/overview" element={<OwnerOverviewPage />} />
-              <Route path="/app/pos" element={<PosTerminalPage />} />
-              <Route path="/app/kitchen" element={<KitchenDisplayPage />} />
-              <Route path="/app/tables" element={<TableManagementPage />} />
-              <Route path="/hotel/overview" element={<HotelReceptionPage />} />
-              <Route path="/hotel/housekeeping" element={<HousekeepingPage />} />
-              <Route path="/app/inventory" element={<InventoryPage />} />
-              <Route path="/app/reports" element={<ReportsPage />} />
-            </Route>
-          </Routes>
+              {/* Operations Staff Routes */}
+              <Route element={<StaffLayout />}>
+                <Route path="/app/overview" element={<OwnerOverviewPage />} />
+                <Route path="/app/pos" element={<PosTerminalPage />} />
+                <Route path="/app/kitchen" element={<KitchenDisplayPage />} />
+                <Route path="/app/tables" element={<TableManagementPage />} />
+                <Route path="/hotel/overview" element={<HotelReceptionPage />} />
+                <Route path="/hotel/housekeeping" element={<HousekeepingPage />} />
+                <Route path="/app/inventory" element={<InventoryPage />} />
+                <Route path="/app/reports" element={<ReportsPage />} />
+              </Route>
+            </Routes>
 
-          {/* Floating Live Persona Switcher */}
-          <DemoRoleSwitcher />
-        </CartProvider>
-      </AuthProvider>
-    </Router>
+            {/* Floating Live Persona Switcher */}
+            <DemoRoleSwitcher />
+          </CartProvider>
+        </AuthProvider>
+      </Router>
+    </ErrorBoundary>
   );
 };
 
