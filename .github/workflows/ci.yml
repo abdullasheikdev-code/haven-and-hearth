@@ -32,8 +32,13 @@ jobs:
       - name: Build Monorepo
         run: npm run build
 
+      - name: Seed Demo Database
+        run: npm run seed
+        env:
+          MONGO_URI: mongodb://127.0.0.1:27017/haven_and_hearth
+
       - name: Run Test Suites
         run: npm test
         env:
-          MONGO_URI: mongodb://127.0.0.1:27017/haven_and_hearth_test
+          MONGO_URI: mongodb://127.0.0.1:27017/haven_and_hearth
           JWT_SECRET: test_ci_jwt_secret_token_12345
