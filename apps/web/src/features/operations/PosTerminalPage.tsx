@@ -143,9 +143,20 @@ export const PosTerminalPage: React.FC = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col lg:flex-row gap-6 text-left">
+    <div className="min-h-[calc(100vh-8rem)] lg:h-[calc(100vh-8rem)] flex flex-col lg:flex-row gap-6 text-left relative">
+      {/* Mobile Floating Bill Trigger */}
+      {cart.length > 0 && (
+        <a
+          href="#pos-bill"
+          className="lg:hidden fixed bottom-20 right-4 z-30 flex items-center gap-2 px-4 py-2.5 rounded-full bg-forest-900 text-ivory-50 shadow-editorial border border-forest-700 text-xs font-bold animate-in fade-in slide-in-from-bottom-2"
+        >
+          <Receipt className="w-4 h-4 text-mango-300" />
+          <span>Ticket ({cart.length} • {formatCurrency(total)})</span>
+        </a>
+      )}
+
       {/* Left Column: Menu Items Catalog */}
-      <div className="flex-1 flex flex-col bg-white rounded-3xl border border-ivory-300 shadow-soft overflow-hidden">
+      <div className="flex-1 flex flex-col bg-white rounded-3xl border border-ivory-300 shadow-soft overflow-hidden min-h-[400px]">
         {/* Category bar & Search */}
         <div className="p-4 border-b border-ivory-200 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
@@ -207,7 +218,7 @@ export const PosTerminalPage: React.FC = () => {
       </div>
 
       {/* Right Column: Active Bill & Checkout Register */}
-      <div className="w-full lg:w-96 flex flex-col bg-white rounded-3xl border border-ivory-300 shadow-editorial overflow-hidden">
+      <div id="pos-bill" className="w-full lg:w-96 flex flex-col bg-white rounded-3xl border border-ivory-300 shadow-editorial overflow-hidden scroll-mt-20">
         {/* Bill Header */}
         <div className="p-4 border-b border-ivory-200 space-y-3">
           <div className="flex items-center justify-between">

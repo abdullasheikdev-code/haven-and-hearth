@@ -195,36 +195,126 @@ export const Header: React.FC = () => {
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-ivory-300 bg-ivory-100 px-4 pt-3 pb-6 space-y-3">
-          <Link
-            to="/restaurants"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-charcoal-800 hover:bg-ivory-200"
-          >
-            Dining &amp; Bars
-          </Link>
-          <Link
-            to="/hotels"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-charcoal-800 hover:bg-ivory-200"
-          >
-            Boutique Stays
-          </Link>
-          <Link
-            to="/cart"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm font-medium text-charcoal-800 hover:bg-ivory-200"
-          >
-            Cart ({itemCount})
-          </Link>
-          {isStaff && (
+        <div className="md:hidden border-t border-ivory-300 bg-ivory-100/98 backdrop-blur-md px-4 pt-4 pb-6 space-y-3 shadow-editorial animate-in slide-in-from-top-2 duration-200">
+          {/* User Status Header on Mobile */}
+          {user ? (
+            <div className="p-3 bg-white rounded-2xl border border-ivory-300 flex items-center justify-between shadow-soft">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-forest-800 text-ivory-100 text-sm font-bold flex items-center justify-center">
+                  {user.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-charcoal-900 leading-tight">{user.name}</p>
+                  <p className="text-[10px] text-charcoal-500 truncate max-w-[170px]">{user.email}</p>
+                  <span className="inline-block mt-0.5 px-2 py-0.5 bg-ivory-200 text-[9px] font-bold text-forest-800 rounded">
+                    {user.role.replace('_', ' ')}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={async () => {
+                  setMobileMenuOpen(false);
+                  await logout();
+                  navigate('/');
+                }}
+                className="p-2 text-red-600 hover:bg-red-50 rounded-xl"
+                title="Sign Out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 pb-1">
+              <Link
+                to="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-2.5 rounded-xl border border-ivory-400 bg-white text-xs font-bold text-charcoal-800 hover:bg-ivory-50 transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center py-2.5 rounded-xl bg-forest-800 text-ivory-50 text-xs font-bold hover:bg-forest-900 transition-colors shadow-soft"
+              >
+                Register
+              </Link>
+            </div>
+          )}
+
+          {/* Navigation Links */}
+          <div className="space-y-1 pt-1">
             <Link
-              to="/app/overview"
+              to="/restaurants"
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-lg text-sm font-medium text-forest-800 bg-forest-50"
+              className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-charcoal-800 hover:bg-ivory-200 transition-colors"
             >
-              Operations Hub
+              <UtensilsCrossed className="w-4 h-4 text-forest-700" />
+              <span>Dining &amp; Bars</span>
             </Link>
+            <Link
+              to="/hotels"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-charcoal-800 hover:bg-ivory-200 transition-colors"
+            >
+              <BedDouble className="w-4 h-4 text-forest-700" />
+              <span>Boutique Stays</span>
+            </Link>
+            <Link
+              to="/restaurants/letoile-brasserie"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-charcoal-800 hover:bg-ivory-200 transition-colors"
+            >
+              <Compass className="w-4 h-4 text-forest-700" />
+              <span>Curated Tasting Menu</span>
+            </Link>
+            <Link
+              to="/cart"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-charcoal-800 hover:bg-ivory-200 transition-colors"
+            >
+              <span className="flex items-center gap-2.5">
+                <ShoppingBag className="w-4 h-4 text-forest-700" />
+                <span>My Cart</span>
+              </span>
+              {itemCount > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-terracotta-500 text-white text-xs font-bold">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+          </div>
+
+          {/* User Account / Staff Links */}
+          {user && (
+            <div className="pt-2 border-t border-ivory-300 space-y-1">
+              {isStaff && (
+                <Link
+                  to="/app/overview"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-bold text-forest-900 bg-forest-100/80 border border-forest-200"
+                >
+                  <LayoutDashboard className="w-4 h-4 text-forest-700" />
+                  <span>Operations Console</span>
+                </Link>
+              )}
+              <Link
+                to="/account/orders"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-charcoal-700 hover:bg-ivory-200"
+              >
+                <ShoppingBag className="w-3.5 h-3.5 text-forest-700" />
+                <span>Order History</span>
+              </Link>
+              <Link
+                to="/account/bookings"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-charcoal-700 hover:bg-ivory-200"
+              >
+                <BedDouble className="w-3.5 h-3.5 text-forest-700" />
+                <span>Stays &amp; Table Bookings</span>
+              </Link>
+            </div>
           )}
         </div>
       )}

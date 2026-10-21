@@ -32,21 +32,22 @@ export const DemoRoleSwitcher: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
+    <div className="fixed bottom-16 md:bottom-6 right-3 sm:right-6 z-50 font-sans max-w-[calc(100vw-1.5rem)]">
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-forest-800 text-ivory-50 shadow-editorial border border-forest-600/40 hover:bg-forest-900 transition-all transform hover:scale-105 group"
+          className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-forest-800 text-ivory-50 shadow-editorial border border-forest-600/40 hover:bg-forest-900 transition-all transform hover:scale-105 group text-xs"
           title="Switch Live Demo Role"
         >
-          <Sparkles className="w-4 h-4 text-mango-500 animate-pulse" />
-          <span className="text-xs font-semibold tracking-wide uppercase">
-            Active: <span className="text-mango-200">{user ? user.role.replace('_', ' ') : 'Guest'}</span>
+          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-mango-500 animate-pulse shrink-0" />
+          <span className="font-semibold tracking-wide uppercase truncate max-w-[130px] sm:max-w-none">
+            <span className="hidden xs:inline">Role: </span>
+            <span className="text-mango-200">{user ? user.role.replace('_', ' ') : 'Guest'}</span>
           </span>
-          <span className="bg-terracotta-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Switch</span>
+          <span className="bg-terracotta-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">Switch</span>
         </button>
       ) : (
-        <div className="bg-white rounded-2xl shadow-editorial border border-charcoal-100 w-80 p-4 animate-in fade-in slide-in-from-bottom-4 duration-200">
+        <div className="bg-white rounded-2xl shadow-editorial border border-charcoal-100 w-80 max-w-[calc(100vw-2rem)] p-4 animate-in fade-in slide-in-from-bottom-4 duration-200">
           <div className="flex items-center justify-between pb-3 border-b border-charcoal-100">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-terracotta-500" />
